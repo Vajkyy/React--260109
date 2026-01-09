@@ -13,13 +13,13 @@ export default function Navigation() {
           </ul>
           <ul>
             <li>
-              <Navlink to="/dasboard">Dashboard</Navlink>
+              <NavLink to="/dasboard">Dashboard</NavLink>
             </li>
             <li>
-              <Navlink to="/courses">Courses</Navlink>
+              <NavLink to="/courses">Courses</NavLink>
             </li>
             <li>
-              <Navlink to="/mentors">Mentors</Navlink>
+              <NavLink to="/mentors">Mentors</NavLink>
             </li>
           </ul>
           <ul>
