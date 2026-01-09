@@ -1,0 +1,151 @@
+.register {
+  width: min(460px, calc(100% - 32px));
+  margin: 72px auto;
+  padding: 28px 26px;
+  color: #eef0ff;
+
+  background: rgba(18, 20, 32, 0.72);
+  border: 1px solid rgba(140, 150, 255, 0.22);
+  border-radius: 18px;
+
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.register::before {
+  content: "";
+  position: absolute;
+  inset: -120px;
+  background:
+    radial-gradient(420px 260px at 15% 10%, rgba(120, 110, 255, 0.35), transparent 60%),
+    radial-gradient(420px 260px at 85% 30%, rgba(170, 120, 255, 0.22), transparent 60%),
+    radial-gradient(520px 340px at 50% 95%, rgba(90, 120, 255, 0.14), transparent 60%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.register h1 {
+  margin: 0 0 18px 0;
+  text-align: center;
+  letter-spacing: 0.08em;
+  font-size: 22px;
+  font-weight: 800;
+
+  color: #f5f6ff;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.register form {
+  display: grid;
+  gap: 14px;
+  position: relative;
+}
+
+.register form > div {
+  display: grid;
+  gap: 8px;
+}
+
+.register label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: rgba(236, 238, 255, 0.78);
+}
+
+.register input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 12px;
+  border-radius: 12px;
+
+  background: rgba(8, 10, 18, 0.55);
+  border: 1px solid rgba(150, 160, 255, 0.18);
+  color: #eef0ff;
+
+  font-size: 14px;
+  outline: none;
+
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+.register input::placeholder {
+  color: rgba(236, 238, 255, 0.42);
+}
+
+.register input:focus {
+  border-color: rgba(140, 150, 255, 0.55);
+  box-shadow:
+    0 0 0 4px rgba(120, 110, 255, 0.18),
+    0 18px 40px rgba(0, 0, 0, 0.25);
+  background: rgba(10, 12, 22, 0.7);
+  transform: translateY(-1px);
+}
+
+.register .descript {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(236, 238, 255, 0.72);
+}
+
+.register .descript a {
+  color: #d9dcff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(217, 220, 255, 0.45);
+  padding-bottom: 2px;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.register .descript a:hover {
+  color: #ffffff;
+  border-color: rgba(217, 220, 255, 0.85);
+}
+
+.register button {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(180, 185, 255, 0.28);
+  background:
+    radial-gradient(120% 120% at 20% 20%, rgba(160, 150, 255, 0.95), rgba(95, 90, 255, 0.55)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
+
+  color: #0b0b12;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+
+  box-shadow:
+    0 16px 40px rgba(80, 70, 255, 0.18),
+    0 14px 40px rgba(0, 0, 0, 0.35);
+
+  transition: transform 140ms ease, filter 140ms ease, box-shadow 140ms ease;
+}
+
+.register button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 46px rgba(80, 70, 255, 0.22),
+    0 18px 46px rgba(0, 0, 0, 0.38);
+}
+
+.register button:active {
+  transform: translateY(0px);
+  filter: brightness(0.98);
+}
+
+.error-text {
+  display: block;
+  margin-top: -2px;
+  font-size: 12px;
+  color: rgba(255, 140, 170, 0.95);
+}

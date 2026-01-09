@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import "../css/login.css";
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
