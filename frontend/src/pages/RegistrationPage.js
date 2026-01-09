@@ -1,91 +1,115 @@
-import React from "react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function RegistrationPage() {
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
+  const [errors, setErrors] = useState({});
+
   function validateForm() {
     const newErrors = {};
 
-    if (!name) {
-      newErrors.name = "Name is required";
-    } else if (name.length < 3) {
-      newErrors.name = "Name must be at least 3 characters long";
+    if (!userName.trim()) {
+      newErrors.userName = "Name is required.";
     }
 
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email is required.";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = "Invalid email address.";
     }
 
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = "Password is required.";
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+      newErrors.password = "Your password must be at least 6 characters long.";
     }
 
     if (!cpassword) {
-      newErrors.cpassword = "Please confirm your password";
+      newErrors.cpassword = "Confirm password is required.";
     } else if (password !== cpassword) {
-      newErrors.cpassword = "Passwords do not match";
+      newErrors.cpassword = "Passwords do not match.";
     }
 
     return newErrors;
   }
 
+  function submit(e) {
+    e.preventDefault();
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      // ide jöhet majd a regisztrációs kérés (API)
+      // pl. console.log({ userName, email, password });
+    }
+  }
+
   return (
-    <div className="login">
+    <div className="register">
       <h1>CREATE ACCOUNT</h1>
+
       <form onSubmit={submit}>
         <div>
-          <label htmlFor="name">FULL NAME</label>
+          <label htmlFor="userName">NAME</label>
           <input
-            type="text"
-            value={name}
-            placeholder="Enter your full name"
-            id="name"
+            id="userName"
+            value={userName}
+            placeholder="Enter your name"
+            onChange={(e) => setUserName(e.target.value)}
           />
-          {errors.name && <span className="error-text">{errors.name}</span>}
+          {errors.userName && (
+            <span className="error-text">{errors.userName}</span>
+          )}
         </div>
+
         <div>
           <label htmlFor="email">EMAIL ADDRESS</label>
           <input
             type="email"
+            id="email"
             value={email}
             placeholder="Enter your email"
-            id="email"
+            onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
+
         <div>
           <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
+            id="password"
             value={password}
             placeholder="Enter your password"
-            id="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           {errors.password && (
             <span className="error-text">{errors.password}</span>
           )}
         </div>
+
         <div>
           <label htmlFor="cpassword">CONFIRM PASSWORD</label>
           <input
-            type="cpassword"
+            type="password"
+            id="cpassword"
             value={cpassword}
             placeholder="Confirm your password"
-            id="cpassword"
+            onChange={(e) => setCpassword(e.target.value)}
           />
           {errors.cpassword && (
             <span className="error-text">{errors.cpassword}</span>
           )}
         </div>
-        <div>
-          <input type="submit" value="CREATE ACCOUNT" />
-        </div>
+
         <div className="descript">
-          Already have an account?
-          <NavLink to="/login">SIGN IN HERE</NavLink>
+          Already have an account? <NavLink to="/login">LOGIN</NavLink>
         </div>
+
+        <button type="submit">REGISTER</button>
       </form>
     </div>
   );

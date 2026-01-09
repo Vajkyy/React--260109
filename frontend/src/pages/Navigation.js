@@ -13,7 +13,7 @@ export default function Navigation() {
           </ul>
           <ul>
             <li>
-              <NavLink to="/dasboard">Dashboard</NavLink>
+              <NavLink to="/dashboard">Dashboard</NavLink>
             </li>
             <li>
               <NavLink to="/courses">Courses</NavLink>
