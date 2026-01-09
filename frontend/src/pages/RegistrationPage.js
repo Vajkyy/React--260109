@@ -1,6 +1,36 @@
 import React from "react";
 
 export default function RegistrationPage() {
+  function validateForm() {
+    const newErrors = {};
+
+    if (!name) {
+      newErrors.name = "Name is required";
+    } else if (name.length < 3) {
+      newErrors.name = "Name must be at least 3 characters long";
+    }
+
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    if (!cpassword) {
+      newErrors.cpassword = "Please confirm your password";
+    } else if (password !== cpassword) {
+      newErrors.cpassword = "Passwords do not match";
+    }
+
+    return newErrors;
+  }
+
   return (
     <div className="login">
       <h1>CREATE ACCOUNT</h1>
@@ -33,7 +63,9 @@ export default function RegistrationPage() {
             placeholder="Enter your password"
             id="password"
           />
-          {errors.password && <span className="error-text">{errors.password}</span>}
+          {errors.password && (
+            <span className="error-text">{errors.password}</span>
+          )}
         </div>
         <div>
           <label htmlFor="cpassword">CONFIRM PASSWORD</label>
@@ -43,7 +75,9 @@ export default function RegistrationPage() {
             placeholder="Confirm your password"
             id="cpassword"
           />
-           {errors.cpassword && <span className="error-text">{errors.cpassword}</span>}
+          {errors.cpassword && (
+            <span className="error-text">{errors.cpassword}</span>
+          )}
         </div>
         <div>
           <input type="submit" value="CREATE ACCOUNT" />
