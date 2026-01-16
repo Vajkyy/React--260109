@@ -11,30 +11,38 @@ export function AuthProvider({ children }) {
   const [serverError, setServerError] = useState(null);
 
   // Login
-  function login(adat) {
+  async function login(adat) {
     setLoading(true);
-    myAxios
-      .post("/users/login", adat)
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        setToken(response.data.token);
-        setUser(response.data.user);
-        window.location.href = "/";
-      })
-      .catch(hibakezeles)
-      .finally(() => setLoading(false));
+    try {
+      const response = await myAxios.post("/users/login", adat);
+      const loggedInUser = response.data.user;
+      const token = response.data.token;
+
+      if (!loggedInUser || !token) throw new Error("Invalid login response");
+
+      localStorage.setItem("token", token);
+      setToken(token);
+      setUser(loggedInUser);
+
+      window.location.href = "/"; // vagy navigate("/")
+    } catch (error) {
+      hibakezeles(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Registration
-  function register(adat) {
+  async function register(adat) {
     setLoading(true);
-    myAxios
-      .post("/users/register", adat)
-      .then(() => {
-        window.location.href = "/login";
-      })
-      .catch(hibakezeles)
-      .finally(() => setLoading(false));
+    try {
+      await myAxios.post("/users/register", adat);
+      window.location.href = "/login"; // átirányítás loginra
+    } catch (error) {
+      hibakezeles(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Logout
@@ -50,9 +58,8 @@ export function AuthProvider({ children }) {
     loadUser();
   }, []);
 
-  function loadUser() {
+  async function loadUser() {
     const savedToken = localStorage.getItem("token");
-
     if (!savedToken) {
       setLoading(false);
       setUser(null);
@@ -62,14 +69,23 @@ export function AuthProvider({ children }) {
     setToken(savedToken);
     setLoading(true);
 
-    myAxios
-      .get("/users/me", { headers: getAuthHeaders() })
-      .then((response) => setUser(response.data))
-      .catch(() => {
+    try {
+      const response = await myAxios.get("/users/me", {
+        headers: getAuthHeaders(),
+      });
+      const fetchedUser = response.data;
+
+      if (fetchedUser) setUser(fetchedUser);
+      else {
         setUser(null);
         localStorage.removeItem("token");
-      })
-      .finally(() => setLoading(false));
+      }
+    } catch (error) {
+      setUser(null);
+      localStorage.removeItem("token");
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Error handling

@@ -1,35 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import "../css/login.css";
-
+import AuthContext from "../contexts/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { login, serverError } = useContext(AuthContext);
 
   function validateForm() {
     const newErrors = {};
 
-    if (!email) {
-      newErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!email) newErrors.email = "Email is required.";
+    else if (!/\S+@\S+\.\S+/.test(email))
       newErrors.email = "Invalid email address.";
-    }
 
-    if (!password) {
-      newErrors.password = "Password is required.";
-    } else if (password.length < 6) {
+    if (!password) newErrors.password = "Password is required.";
+    else if (password.length < 6)
       newErrors.password = "Your password must be at least 6 characters long.";
-    }
 
     return newErrors;
   }
 
-  function submit(e) {
-    e.preventDefault();
+  function submit(event) {
+    event.preventDefault();
     const validationErrors = validateForm();
-    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+    login({ email, password });
   }
 
   return (
@@ -62,6 +65,9 @@ export default function LoginPage() {
             <span className="error-text">{errors.password}</span>
           )}
         </div>
+
+        {/* Backend által visszaadott hiba */}
+        {serverError && <span className="error-text">{serverError}</span>}
 
         <div className="descript">
           Registration is free!{" "}

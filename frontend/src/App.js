@@ -27,7 +27,7 @@ function App() {
     {
       path: "/",
       element: <Layout />,
-      //middleware: [autMiddleware],
+      middleware: [autMiddleware],
       children: [
         {
           index: true,
