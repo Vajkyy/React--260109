@@ -1,0 +1,110 @@
+header {
+  width: 100%;
+  padding: 18px 32px;
+
+  background: rgba(14, 16, 28, 0.75);
+  border-bottom: 1px solid rgba(140, 150, 255, 0.18);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+
+  backdrop-filter: blur(10px);
+}
+
+nav {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ===== LIST RESET ===== */
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* ===== BRAND ===== */
+
+nav .bold {
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: #f5f6ff;
+}
+
+/* ===== LINKS ===== */
+
+nav a {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+
+  color: rgba(236, 238, 255, 0.7);
+  padding: 6px 4px;
+
+  position: relative;
+  transition: color 140ms ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(140, 150, 255, 0),
+    rgba(140, 150, 255, 0.85),
+    rgba(140, 150, 255, 0)
+  );
+
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+nav a:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* ===== ACTIVE LINK ===== */
+
+nav a.active {
+  color: #ffffff;
+}
+
+nav a.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 720px) {
+  nav {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  nav ul {
+    justify-content: center;
+  }
+}

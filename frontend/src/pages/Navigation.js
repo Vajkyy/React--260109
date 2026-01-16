@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router";
+import "../css/navigation.css";
 
 export default function Navigation() {
   return (
@@ -23,10 +24,10 @@ export default function Navigation() {
             </li>
           </ul>
           <ul>
-            <li>Welcome, {user.user.name ? user.user.name : "Guest"}</li>
+            {/* <li>Welcome, {user.user.name ? user.user.name : "Guest"}</li>
             <li className="bold" onClick={logout}>
               Logout
-            </li>
+            </li> */}
           </ul>
         </nav>
       </header>

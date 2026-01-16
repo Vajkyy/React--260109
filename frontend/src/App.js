@@ -1,13 +1,42 @@
 import "./App.css";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
+import DashboardPage from "./pages/DashboardPage";
+import Layout from "./pages/Layout";
+import autMiddleware from "./middleware/autMiddleware";
 
 function App() {
   const router = createBrowserRouter([
-    { path: "/", element: <Navigate to="/login" replace /> },
-    { path: "/login", element: <LoginPage /> },
-    { path: "/register", element: <RegistrationPage /> },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/register",
+      element: <RegistrationPage />,
+    },
+    {
+      path: "/",
+      element: <Layout />,
+      middleware: [autMiddleware],
+      children: [
+        {
+          index: true,
+          element: <Navigate to="dashboard" replace />,
+        },
+        {
+          path: "dashboard",
+          element: <DashboardPage />,
+        },
+      ],
+    },
   ]);
 
   return <RouterProvider router={router} />;
