@@ -1,8 +1,11 @@
-import React from "react";
-import { NavLink } from "react-router";
+import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import "../css/navigation.css";
+import AuthContext from "../contexts/AuthContext";
 
 export default function Navigation() {
+  const { logout, user, loading } = useContext(AuthContext);
+
   return (
     <div>
       <header>
@@ -24,10 +27,18 @@ export default function Navigation() {
             </li>
           </ul>
           <ul>
-            {/* <li>Welcome, {user.user.name ? user.user.name : "Guest"}</li>
-            <li className="bold" onClick={logout}>
-              Logout
-            </li> */}
+            <li>
+              {loading
+                ? "Loading..."
+                : user
+                ? `Welcome, ${user.name}`
+                : "Guest"}
+            </li>
+            {user && (
+              <li className="bold" onClick={logout}>
+                Logout
+              </li>
+            )}
           </ul>
         </nav>
       </header>

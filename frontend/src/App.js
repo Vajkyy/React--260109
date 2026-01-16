@@ -11,6 +11,8 @@ import RegistrationPage from "./pages/RegistrationPage";
 import DashboardPage from "./pages/DashboardPage";
 import Layout from "./pages/Layout";
 import autMiddleware from "./middleware/autMiddleware";
+import CoursesPage from "./pages/CoursesPage";
+import CourseDetailsPage from "./pages/CourseDetailsPage"
 
 function App() {
   const router = createBrowserRouter([
@@ -25,7 +27,7 @@ function App() {
     {
       path: "/",
       element: <Layout />,
-      middleware: [autMiddleware],
+      //middleware: [autMiddleware],
       children: [
         {
           index: true,
@@ -34,6 +36,19 @@ function App() {
         {
           path: "dashboard",
           element: <DashboardPage />,
+        },
+        {
+          path: "courses",
+          children: [
+            {
+              index: true,
+              element: <CoursesPage />,
+            },
+            {
+              path: ":id",
+              element: <CourseDetailsPage />,
+            },
+          ],
         },
       ],
     },

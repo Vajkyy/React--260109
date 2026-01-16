@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../css/registration.css";
+import AuthContext from "../contexts/AuthContext";
 
 export default function RegistrationPage() {
   const [userName, setUserName] = useState("");
@@ -8,6 +9,7 @@ export default function RegistrationPage() {
   const [password, setPassword] = useState("");
   const [cpassword, setCpassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { register, serverError } = useContext(AuthContext);
 
   function validateForm() {
     const newErrors = {};
@@ -39,13 +41,23 @@ export default function RegistrationPage() {
 
   function submit(e) {
     e.preventDefault();
+
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length === 0) {
-      // ide jöhet majd a regisztrációs kérés (API)
-      // pl. console.log({ userName, email, password });
+    if (Object.keys(validationErrors).length > 0) {
+      return;
     }
+
+    const user = {
+      name: userName,
+      email,
+      password,
+      cpassword,
+    };
+
+    console.log(user);
+    register(user);
   }
 
   return (
