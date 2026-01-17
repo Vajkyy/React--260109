@@ -1,8 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { myAxios, getAuthHeaders } from "../services/api";
 
-const AuthContext = createContext(null);
-export default AuthContext;
+export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -24,7 +23,7 @@ export function AuthProvider({ children }) {
       setToken(token);
       setUser(loggedInUser);
 
-      window.location.href = "/"; // vagy navigate("/")
+      window.location.href = "/";
     } catch (error) {
       hibakezeles(error);
     } finally {
@@ -37,7 +36,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     try {
       await myAxios.post("/users/register", adat);
-      window.location.href = "/login"; // átirányítás loginra
+      window.location.href = "/login";
     } catch (error) {
       hibakezeles(error);
     } finally {
@@ -53,11 +52,7 @@ export function AuthProvider({ children }) {
     window.location.reload();
   }
 
-  // Load user on mount
-  useEffect(() => {
-    loadUser();
-  }, []);
-
+  // Load user
   async function loadUser() {
     const savedToken = localStorage.getItem("token");
     if (!savedToken) {
@@ -103,9 +98,13 @@ export function AuthProvider({ children }) {
     else setServerError("Ismeretlen hiba");
   }
 
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ login, register, loading, user, logout, serverError }}
+      value={{ login, register, loading, user, logout, serverError, loadUser }}
     >
       {children}
     </AuthContext.Provider>
