@@ -1,28 +1,32 @@
-import React, { useState, useContext } from "react";
-import { NavLink } from "react-router-dom";
-import "../css/login.css";
-import {AuthContext} from "../contexts/AuthContext";
+import React, { useContext, useState } from "react";
+import { NavLink } from "react-router";
+import "./css/login.css";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("c@c.hu");
+  const [password, setPassWord] = useState("Aa123456");
   const [errors, setErrors] = useState({});
   const { login, serverError } = useContext(AuthContext);
 
   function validateForm() {
     const newErrors = {};
 
-    if (!email) newErrors.email = "Email is required.";
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Invalid email address.";
+    if (!email) {
+      newErrors.email = "Az email cím kötelező";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Érvénytelen email formátum";
+    }
 
-    if (!password) newErrors.password = "Password is required.";
-    else if (password.length < 6)
-      newErrors.password = "Your password must be at least 6 characters long.";
+    if (!password) {
+      newErrors.password = "A jelszó kötelező";
+    } else if (password.length < 6) {
+      newErrors.password =
+        "A jelszónak legalább 6 karakter hosszúnak kell lennie";
+    }
 
     return newErrors;
   }
-
   function submit(event) {
     event.preventDefault();
     const validationErrors = validateForm();
@@ -30,9 +34,9 @@ export default function LoginPage() {
       setErrors(validationErrors);
       return;
     }
-
-    setErrors({});
-    login({ email, password });
+    const user = { email, password };
+    console.log(user);
+    login(user);
   }
 
   return (
@@ -40,41 +44,42 @@ export default function LoginPage() {
       <h1>WELCOME BACK</h1>
 
       <form onSubmit={submit}>
+        {serverError && <div className="alert-error">{serverError}</div>}
         <div>
           <label htmlFor="email">EMAIL ADDRESS</label>
           <input
             type="email"
-            id="email"
             value={email}
             placeholder="Enter your email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            id="email"
           />
           {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
-
         <div>
           <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
-            id="password"
             value={password}
             placeholder="Enter your password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassWord(e.target.value);
+            }}
+            id="password"
           />
           {errors.password && (
             <span className="error-text">{errors.password}</span>
           )}
         </div>
-
-        {/* Backend által visszaadott hiba */}
-        {serverError && <span className="error-text">{serverError}</span>}
-
-        <div className="descript">
+        <div>
+          <input type="submit" value="LOGIN" />
+        </div>
+        <div className="szoveg">
           Registration is free!{" "}
           <NavLink to="/register">CREATE AN ACCOUNT</NavLink>
         </div>
-
-        <button type="submit">LOGIN</button>
       </form>
     </div>
   );

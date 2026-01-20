@@ -1,16 +1,37 @@
-.App {
-  text-align: center;
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #111; 
+  color: #ddd; 
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+a {
+  color: #1e90ff;
+  text-decoration: none;
 }
 
+button {
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
+.keret {
+  background: #1c1c1c;
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+}
+
+.padding { padding: 1rem; }
+.nagy { font-size: 1.6rem; }
+.szelesseg { width: 100%; }
+.alahuzas {
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+}

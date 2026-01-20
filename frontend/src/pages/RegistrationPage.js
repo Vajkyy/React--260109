@@ -1,128 +1,127 @@
 import React, { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
-import "../css/registration.css";
-import {AuthContext} from "../contexts/AuthContext";
+import { NavLink, useNavigate } from "react-router";
+import "./css/login.css";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function RegistrationPage() {
-  const [userName, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpassword, setCpassword] = useState("");
+  const [password, setPassWord] = useState("");
+  const [cpassword, setCPassWord] = useState("");
   const [errors, setErrors] = useState({});
-  const { register, serverError } = useContext(AuthContext);
+   const {register, serverError}=useContext(AuthContext)
+  const navigate = useNavigate();
 
   function validateForm() {
     const newErrors = {};
-
-    if (!userName.trim()) {
-      newErrors.userName = "Name is required.";
+    if (!name) {
+      newErrors.name = "A név megadása kötelező";
+    } else if (name.length < 3) {
+      newErrors.name = "A névnek legalább 3 karakter hosszúnak kell lennie";
     }
-
     if (!email) {
-      newErrors.email = "Email is required.";
+      newErrors.email = "Az email cím kötelező";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Invalid email address.";
+      newErrors.email = "Érvénytelen email formátum";
     }
 
     if (!password) {
-      newErrors.password = "Password is required.";
+      newErrors.password = "A jelszó kötelező";
     } else if (password.length < 6) {
-      newErrors.password = "Your password must be at least 6 characters long.";
+      newErrors.password =
+        "A jelszónak legalább 6 karakter hosszúnak kell lennie";
     }
-
     if (!cpassword) {
-      newErrors.cpassword = "Confirm password is required.";
+      newErrors.cpassword = "Ismételje meg a jelszót";
     } else if (password !== cpassword) {
-      newErrors.cpassword = "Passwords do not match.";
+      newErrors.cpassword = "A két jelszó nem egyezik!";
     }
 
     return newErrors;
   }
 
-  function submit(e) {
-    e.preventDefault();
-
+  function submit(event) {
+    event.preventDefault();
     const validationErrors = validateForm();
-    setErrors(validationErrors);
-
     if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-
-    const user = {
-      name: userName,
-      email,
-      password,
-      cpassword,
-    };
-
+    const user = { name, email, password, cpassword };
     console.log(user);
     register(user);
   }
-
   return (
-    <div className="register">
+    <div className="login">
       <h1>CREATE ACCOUNT</h1>
-
       <form onSubmit={submit}>
+            {serverError && <div className="alert-error">{serverError}</div>}
         <div>
-          <label htmlFor="userName">NAME</label>
+          <label htmlFor="name">FULL NAME</label>
           <input
-            id="userName"
-            value={userName}
-            placeholder="Enter your name"
-            onChange={(e) => setUserName(e.target.value)}
+            type="text"
+            value={name}
+            autoComplete="name"
+            placeholder="Enter your full name"
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            id="name"
           />
-          {errors.userName && (
-            <span className="error-text">{errors.userName}</span>
-          )}
+          {errors.name && <span className="error-text">{errors.name}</span>}
         </div>
-
         <div>
           <label htmlFor="email">EMAIL ADDRESS</label>
           <input
             type="email"
-            id="email"
             value={email}
             placeholder="Enter your email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            id="email"
           />
           {errors.email && <span className="error-text">{errors.email}</span>}
         </div>
-
         <div>
           <label htmlFor="password">PASSWORD</label>
           <input
             type="password"
-            id="password"
             value={password}
+            autoComplete="password"
             placeholder="Enter your password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassWord(e.target.value);
+            }}
+            id="password"
           />
           {errors.password && (
             <span className="error-text">{errors.password}</span>
           )}
         </div>
-
         <div>
           <label htmlFor="cpassword">CONFIRM PASSWORD</label>
           <input
             type="password"
-            id="cpassword"
+            autoComplete="cpassword"
             value={cpassword}
             placeholder="Confirm your password"
-            onChange={(e) => setCpassword(e.target.value)}
+            onChange={(e) => {
+              setCPassWord(e.target.value);
+            }}
+            id="cpassword"
           />
           {errors.cpassword && (
             <span className="error-text">{errors.cpassword}</span>
           )}
         </div>
-
-        <div className="descript">
-          Already have an account? <NavLink to="/login">LOGIN</NavLink>
+        <div>
+          <input type="submit" value="CREATE ACCOUNT" />
         </div>
-
-        <button type="submit">REGISTER</button>
+        <div className="szoveg">
+          Already have an account?
+          <NavLink to="/login">SIGN IN HERE</NavLink>
+        </div>
       </form>
     </div>
   );

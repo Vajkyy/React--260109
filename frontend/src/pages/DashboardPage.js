@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import "../css/dashboard.css";
+import "./css/dashboard.css";
 import { AuthContext } from "../contexts/AuthContext";
-import { Line, Doughnut } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,153 +11,196 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement,
 } from "chart.js";
+import { Line } from "react-chartjs-2";
+import { Chart, ArcElement } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+
+  ChartJS.register(ArcElement, Tooltip, Legend);
+
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
 export default function DashboardPage() {
   const { user, loadUser, serverError } = useContext(AuthContext);
-
   useEffect(() => {
     loadUser();
   }, []);
 
-  if (!user) {
+  if (!user  ) {
+    console.log(user);
     return (
-      <div className="dashboard-container">
-        <div className="keret">
-          <h1>Felhasználó lekérése folyamatban ...</h1>
-          <p>{serverError || "Az oldal betöltés alatt ..."}</p>
+      <div className=" ">
+        <div className="keret nagy padding">
+          <h1> Felhasználó lekérése folyamatban ... </h1>
+
+          <p>{serverError ? serverError : " Az oldal betöltés alatt ..."}</p>
+          <div className="dobozok">
+            <div className="keret">
+              <h3>{"enrolledCourses" || 0}</h3>
+              <p>enrolled courses</p>
+            </div>
+            <div className="keret">
+              <h3>{"completedChapters"}</h3>
+              <p>Completed chapters</p>
+            </div>
+            <div className="keret">
+              <h3>{"totalCreditsEarned"}</h3>
+              <p>Total credits earned</p>
+            </div>
+          </div>
+          <div className="diagram">
+            <div className="line keret">
+              ITT lesz a VONAL diagram
+              
+            </div>
+            <div className="pie keret">
+              ITT lesz a KÖR diagram
+              
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  const userStats = user?.stats || {};
-  const userName = user?.user?.name || "Guest";
-  const creditBalance = user?.user?.creditBalance || 0;
 
-  // ===== LINE CHART DATA =====
-  const labels = Array.from({ length: 30 }, (_, i) => {
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "Credit progress (Last 30 days)",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Credits",
+        },
+      },
+      x: {
+        title: {
+          display: false,
+          text: "Date",
+        },
+      },
+    },
+  };
+  /* vonaldiagramhoz */
+  //A label az utolós 30 nap legyen
+  const labels = [];
+  for (let index = 0; index < 30; index++) {
     const d = new Date();
-    d.setDate(d.getDate() - (29 - i));
-    return d.toISOString().split("T")[0];
-  });
+    d.setDate(d.getDate() - (29 - index));
+    labels.push(d.toISOString().split("T")[0]);
+  }
+
 
   const creditsByDate = {};
-  user?.recentActivity?.forEach((item) => {
-    const date = item.timestamp.split("T")[0];
-    creditsByDate[date] = (creditsByDate[date] || 0) + item.creditsEarned;
-  });
 
-  const lineData = {
-    labels,
+ 
+  
+   if (user.recentActivity !== undefined) {
+    user.recentActivity.forEach((item) => {
+      const date = item.timestamp.split("T")[0]; // YYYY-MM-DD
+      if (!creditsByDate[date]) {
+        creditsByDate[date] = 0;
+      }
+      creditsByDate[date] += item.creditsEarned;
+    });
+  }
+ 
+  const dataValues = labels.map((date) => creditsByDate[date] || 0);
+
+  const data = {
+    labels, 
     datasets: [
       {
-        label: "Credits",
-        data: labels.map((date) => creditsByDate[date] || 0),
+        labels: "Credits",
+        data: dataValues, 
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
 
-  const lineOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      title: { display: true, text: "CREDIT PROGRESS (LAST 30 DAYS)" },
-    },
-    scales: {
-      y: { beginAtZero: true, title: { display: true, text: "Credits" } },
-      x: { title: { display: false } },
-    },
-  };
 
-  // ===== DOUGHNUT CHART DATA =====
-  const doughnutData = {
-    labels: ["Completed Chapters", "Remaining Chapters"],
-    datasets: [
-      {
-        data: [
-          userStats.completedChapters || 0,
-          (userStats.enrolledCourses || 0) - (userStats.completedChapters || 0),
-        ],
-        backgroundColor: [
-          "rgba(54, 162, 235, 0.7)",
-          "rgba(200, 200, 200, 0.3)",
-        ],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(200, 200, 200, 0.5)"],
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const doughnutOptions = {
+  const options2 = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom",
-        labels: { color: "rgba(236, 238, 255, 0.78)" },
       },
       title: {
         display: true,
-        text: "COURSE COMPLETION STATUS",
-        color: "#eef0ff",
+        text: "Statisztikák",
       },
     },
   };
+  const data2 = {
+    labels: ["Completed chapters", "Enrolled Courses"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [user.stats.completedChapters, user.stats.enrolledCourses],
+        
+        backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
+        borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
+        borderWidth: 2,
+      },
+    ],
+  };
 
   return (
-    <div className="dashboard-container">
-      <div className="keret">
-        <h1>WELCOME BACK, {userName.toUpperCase()}!</h1>
+    <div className=" ">
+      <div className="keret nagy padding">
+        <h1>Welcome back, {user.user.name ? user.user.name : "Guest"}!</h1>
         <h2 className="alahuzas">
-          CURRENT BALANCE: <strong>{creditBalance}</strong> CREDITS
+          Current balance <strong>{user.user.creditBalance || 0}</strong>{" "}
+          credits
         </h2>
 
-        {/* METRICS */}
         <div className="dobozok">
-          <div className="keret metric">
-            <h3>{userStats.enrolledCourses || 0}</h3>
-            <p>ENROLLED COURSES</p>
+          <div className="keret">
+            <h3>{user.stats.enrolledCourses || 0}</h3>
+            <p>enrolled courses</p>
           </div>
-          <div className="keret metric">
-            <h3>{userStats.completedChapters || 0}</h3>
-            <p>COMPLETED CHAPTERS</p>
+          <div className="keret">
+            <h3>{user.stats.completedChapters}</h3>
+            <p>Completed chapters</p>
           </div>
-          <div className="keret metric">
-            <h3>{userStats.totalCreditsEarned || 0}</h3>
-            <p>TOTAL CREDITS EARNED</p>
+          <div className="keret">
+            <h3>{user.stats.totalCreditsEarned}</h3>
+            <p>Total credits earned</p>
           </div>
         </div>
-
-        {/* CHARTS */}
         <div className="diagram">
           <div className="line keret">
-            <Line data={lineData} options={lineOptions} />
+          
+          <Line options={options} data={data} /> 
           </div>
           <div className="pie keret">
-            <Doughnut data={doughnutData} options={doughnutOptions} />
+       
+            <Doughnut options={options2} data={data2} />
           </div>
-        </div>
-
-        {/* ACTION BUTTONS */}
-        <div className="actions">
-          <button>BROWSE COURSES</button>
-          <button>BOOK MENTOR SESSION</button>
         </div>
       </div>
     </div>

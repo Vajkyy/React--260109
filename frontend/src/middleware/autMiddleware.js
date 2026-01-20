@@ -1,9 +1,12 @@
-import { redirect } from 'react-router-dom';
+import { redirect } from "react-router";
 
-async function autMiddleware() {
-    const token = localStorage.getItem("token");
-    if (!token){
-        throw redirect("/login");
-    }
+async function authMiddleware({ request }) {
+  
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw redirect("/login");
+  }
 }
-export default autMiddleware;
+
+export default authMiddleware;

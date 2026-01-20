@@ -1,0 +1,30 @@
+.dobozok {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dobozok .keret {
+  flex: 1;
+  text-align: center;
+  background: #1c1c1c;
+  color: #ccc;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+}
+
+.diagram {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.line, .pie {
+  flex: 1;
+  min-width: 320px;
+  height: 320px;
+  background: #1c1c1c;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+}

@@ -1,0 +1,14 @@
+.sessions {
+  padding: 2rem;
+}
+
+.sessions h2 {
+  color: #1e90ff;
+  margin-bottom: 1rem;
+}
+
+.sessions .keret {
+  margin-bottom: 1rem;
+  background: #1c1c1c;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+}

@@ -1,0 +1,49 @@
+.courses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.courseone {
+  padding: 2rem;
+  background: #1c1c1c;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+.courseone h1 {
+  color: #1e90ff;
+  margin-bottom: 0.5rem;
+}
+
+.courseone h2 {
+  color: #8e44ad;
+  margin-top: 1rem;
+}
+
+.courseone p {
+  color: #ccc;
+  line-height: 1.5rem;
+}
+
+button {
+  margin-top: 0.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.progress-container {
+  background: #2a2a2a;
+  border-radius: 12px;
+  height: 22px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressbar {
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1e90ff, #28a745);
+  transition: width 0.4s ease-in-out;
+}
