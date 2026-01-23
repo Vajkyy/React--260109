@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import Course from "../components/Course";
-import "./css/courses.css";
 import CourseSearch from "../components/CourseSearch";
 import { CoursesContext } from "../contexts/CoursesContext";
+import "./css/courses.css";
 
 export default function CoursesPage() {
   const { getCourses, filteredList, loading, serverError } =
@@ -11,25 +11,24 @@ export default function CoursesPage() {
   useEffect(() => {
     getCourses();
   }, []);
-  if (loading || filteredList.length==0) {
-    
-    return (
-      <>
-        <CourseSearch />{" "}
-        <div className="courses ">
-          Betöltés folyamatban, vagy nincs kurzus!
-       
-        </div>
-      </>
-    );
-  }
+
   return (
     <>
       <CourseSearch />
-      <div className="courses ">
-        {filteredList.map((course) => {
-          return <Course course={course} key={course.id} />;
-        })}
+
+      <div className="courses">
+        {loading && <div>Betöltés folyamatban...</div>}
+
+        {!loading && serverError && <div>{serverError}</div>}
+
+        {!loading && !serverError && filteredList.length === 0 && (
+          <div>Nincs találat.</div>
+        )}
+
+        {!loading &&
+          filteredList.map((course) => (
+            <Course course={course} key={course.id} />
+          ))}
       </div>
     </>
   );

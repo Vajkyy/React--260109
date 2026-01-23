@@ -11,8 +11,6 @@ export function usePolling(callback, interval = 30000) {
   const startPolling = useCallback(() => {
     if (intervalIdRef.current) return;
 
-    savedCallback.current();
-
     intervalIdRef.current = setInterval(() => {
       savedCallback.current();
     }, interval);
@@ -27,7 +25,7 @@ export function usePolling(callback, interval = 30000) {
 
   useEffect(() => {
     startPolling();
-    return () => stopPolling();
+    return stopPolling;
   }, [startPolling, stopPolling]);
 
   return { startPolling, stopPolling };

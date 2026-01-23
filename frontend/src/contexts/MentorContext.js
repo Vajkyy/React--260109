@@ -1,43 +1,34 @@
 import { myAxios, getAuthHeaders } from "../services/api";
 import { createContext, useState } from "react";
 
-
 export const MentorContext = createContext();
-
 
 export function MentorProvider({ children }) {
   const [mentorList, setMentorList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   function getMentor() {
     setLoading(true);
+
     myAxios
       .get("/mentors/sessions", { headers: getAuthHeaders() })
       .then((response) => {
-        setMentorList(response.data.sessions);
+        setMentorList(response.data.sessions || []);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
+        setMentorList([]);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function bookedSession(id) {
     setLoading(true);
+
     return myAxios
-      .post(
-        `/mentors/sessions/${id}/book`,
-        {},
-        {
-          headers: getAuthHeaders(),
-        },
-      )
-      .then((response) => {
-        return response;
-      })
-      .catch((error) => {
-        throw error;
-      })
+      .post(`/mentors/sessions/${id}/book`, {}, { headers: getAuthHeaders() })
       .finally(() => {
         setLoading(false);
       });
@@ -45,7 +36,12 @@ export function MentorProvider({ children }) {
 
   return (
     <MentorContext.Provider
-      value={{ getMentor, mentorList, loading, bookedSession }}
+      value={{
+        mentorList,
+        loading,
+        getMentor,
+        bookedSession,
+      }}
     >
       {children}
     </MentorContext.Provider>

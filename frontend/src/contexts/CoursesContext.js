@@ -1,111 +1,99 @@
 import { myAxios, getAuthHeaders } from "../services/api";
-import { createContext, useEffect, useState } from "react";
-
+import { createContext, useState } from "react";
 
 export const CoursesContext = createContext();
-
 
 export function CoursesProvider({ children }) {
   const [coursesList, setCoursesList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [serverError, setServerError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   function getCourses() {
     setLoading(true);
+    setServerError(null);
+
     myAxios
       .get("/courses", { headers: getAuthHeaders() })
       .then((response) => {
-        setCoursesList(response.data.courses);
-        setFilteredList(response.data.courses);
+        const courses = response.data.courses || [];
+        setCoursesList(courses);
+        setFilteredList(courses);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        setServerError("Nem sikerült betölteni a kurzusokat.");
       })
       .finally(() => setLoading(false));
   }
+
   function getCourseById(id) {
-    console.log(id);
     setLoading(true);
+    setServerError(null);
+
     myAxios
       .get(`/courses/${id}`, { headers: getAuthHeaders() })
       .then((response) => {
         setSelectedCourse(response.data);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        setServerError("Nem sikerült betölteni a kurzust.");
       })
       .finally(() => setLoading(false));
   }
 
   function szuro(difficulty, search) {
-    const szurtLista = coursesList.filter((c) => {
+    const result = coursesList.filter((c) => {
       const difficultyOk = difficulty === "all" || c.difficulty === difficulty;
 
       const searchOk =
-        search === "" ||
-        c.description.toLowerCase().includes(search.toLowerCase()) ||
-        c.title.toLowerCase().includes(search.toLowerCase());
+        !search ||
+        c.title.toLowerCase().includes(search.toLowerCase()) ||
+        c.description.toLowerCase().includes(search.toLowerCase());
 
       return difficultyOk && searchOk;
     });
 
-    setFilteredList(szurtLista);
+    setFilteredList(result);
   }
 
   function enrollCourse(courseId) {
     setLoading(true);
-    myAxios
+    setServerError(null);
+
+    return myAxios
       .post(
         `/courses/${courseId}/enroll`,
         { isEnrolled: true },
-        {
-          headers: getAuthHeaders(),
-        },
+        { headers: getAuthHeaders() },
       )
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }
 
   function completeChapter(courseId, chapterId) {
     setLoading(true);
+    setServerError(null);
+
     return myAxios
       .post(
         `/courses/${courseId}/chapters/${chapterId}/complete`,
         { completed: true },
-        {
-          headers: getAuthHeaders(),
-        },
+        { headers: getAuthHeaders() },
       )
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }
+
   return (
     <CoursesContext.Provider
       value={{
         getCourses,
         filteredList,
-        serverError,
-        loading,
-        szuro,
-        completeChapter,
-        enrollCourse,
         selectedCourse,
+        loading,
+        serverError,
+        szuro,
+        enrollCourse,
+        completeChapter,
         getCourseById,
       }}
     >
