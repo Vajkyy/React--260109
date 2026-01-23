@@ -59,11 +59,10 @@ export default function DashboardPage() {
           </div>
           <div className="diagram">
             <div className="line keret">
-              ITT lesz a VONAL diagram
               
             </div>
             <div className="pie keret">
-              ITT lesz a KÖR diagram
+
               
             </div>
           </div>

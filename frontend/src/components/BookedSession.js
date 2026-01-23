@@ -1,53 +1,58 @@
+import React from "react";
 import "../pages/css/mentor.css";
 
-export default function BookedSession({ session, mentor }) {
+export default function BookedSession({ session }) {
+  const { session: s, status } = session;
+
+  const statusClass =
+    status === "rejected"
+      ? "rejected-button"
+      : status === "pending"
+        ? "pending-button"
+        : status === "cancelled"
+          ? "canceled-button"
+          : "confirmed-button";
+
+  const formattedDate = new Date(s.sessionDate).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  const formattedTime = new Date(s.sessionDate).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
   return (
     <div className="sessions keret padding">
-      <h3>{session.session.mentorName}</h3>
+      <h3>{s.mentorName}</h3>
+
       <div className="button">
-        <button
-          className={
-            session.status === "rejected"
-              ? "rejected-button"
-              : session.status === "pending"
-                ? "pending-button"
-                : session.status === "cancelled"
-                  ? "canceled-button"
-                  : "confirmed-button"
-          }
-        >
-          {session.status}
-        </button>
+        <button className={statusClass}>{status}</button>
       </div>
+
       <div className="mentor-container">
         <div className="keret">
-          <p>date</p>
-          <p>
-            {new Date(session.session.sessionDate).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}{" "}
-          </p>
+          <p>Date</p>
+          <p>{formattedDate}</p>
         </div>
+
         <div className="keret">
-          <p>time</p>
-          <p>
-            {new Date(session.session.sessionDate).toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "2-digit",
-              hour12: true,
-            })}
-          </p>
+          <p>Time</p>
+          <p>{formattedTime}</p>
         </div>
+
         <div className="keret">
-          <p>duration</p>
-          <p>{session.session.durationMinutes} minutes</p>
+          <p>Duration</p>
+          <p>{s.durationMinutes} minutes</p>
         </div>
+
         <div className="keret">
-          <p>cost</p>
-          <p>{session.session.creditCost} credists</p>
+          <p>Cost</p>
+          <p>{s.creditCost} credits</p>
         </div>
       </div>
     </div>

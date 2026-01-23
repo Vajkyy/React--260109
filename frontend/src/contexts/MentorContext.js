@@ -19,19 +19,19 @@ export function MentorProvider({ children }) {
         console.error(error);
         setMentorList([]);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }
 
-  function bookedSession(id) {
+  function bookedSession(mentorId) {
     setLoading(true);
 
     return myAxios
-      .post(`/mentors/sessions/${id}/book`, {}, { headers: getAuthHeaders() })
-      .finally(() => {
-        setLoading(false);
-      });
+      .post(
+        `/mentors/sessions/${mentorId}/book`,
+        { mentorId }, // most már a body tartalmazza a szükséges adatot
+        { headers: getAuthHeaders() },
+      )
+      .finally(() => setLoading(false));
   }
 
   return (

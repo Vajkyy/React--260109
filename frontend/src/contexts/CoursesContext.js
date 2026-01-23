@@ -1,5 +1,5 @@
 import { myAxios, getAuthHeaders } from "../services/api";
-import { createContext, useState } from "react";
+import { createContext, useState, useCallback } from "react";
 
 export const CoursesContext = createContext();
 
@@ -10,7 +10,7 @@ export function CoursesProvider({ children }) {
   const [serverError, setServerError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  function getCourses() {
+  const getCourses = () => {
     setLoading(true);
     setServerError(null);
 
@@ -25,9 +25,9 @@ export function CoursesProvider({ children }) {
         setServerError("Nem sikerült betölteni a kurzusokat.");
       })
       .finally(() => setLoading(false));
-  }
+  };
 
-  function getCourseById(id) {
+  const getCourseById = (id) => {
     setLoading(true);
     setServerError(null);
 
@@ -40,24 +40,28 @@ export function CoursesProvider({ children }) {
         setServerError("Nem sikerült betölteni a kurzust.");
       })
       .finally(() => setLoading(false));
-  }
+  };
 
-  function szuro(difficulty, search) {
-    const result = coursesList.filter((c) => {
-      const difficultyOk = difficulty === "all" || c.difficulty === difficulty;
+  const szuro = useCallback(
+    (difficulty, search) => {
+      const result = coursesList.filter((c) => {
+        const difficultyOk =
+          difficulty === "all" || c.difficulty === difficulty;
 
-      const searchOk =
-        !search ||
-        c.title.toLowerCase().includes(search.toLowerCase()) ||
-        c.description.toLowerCase().includes(search.toLowerCase());
+        const searchOk =
+          !search ||
+          c.title.toLowerCase().includes(search.toLowerCase()) ||
+          c.description.toLowerCase().includes(search.toLowerCase());
 
-      return difficultyOk && searchOk;
-    });
+        return difficultyOk && searchOk;
+      });
 
-    setFilteredList(result);
-  }
+      setFilteredList(result);
+    },
+    [coursesList],
+  ); // coursesList a függőség
 
-  function enrollCourse(courseId) {
+  const enrollCourse = (courseId) => {
     setLoading(true);
     setServerError(null);
 
@@ -68,9 +72,9 @@ export function CoursesProvider({ children }) {
         { headers: getAuthHeaders() },
       )
       .finally(() => setLoading(false));
-  }
+  };
 
-  function completeChapter(courseId, chapterId) {
+  const completeChapter = (courseId, chapterId) => {
     setLoading(true);
     setServerError(null);
 
@@ -81,7 +85,7 @@ export function CoursesProvider({ children }) {
         { headers: getAuthHeaders() },
       )
       .finally(() => setLoading(false));
-  }
+  };
 
   return (
     <CoursesContext.Provider
